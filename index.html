@@ -386,25 +386,25 @@
     }
     .comparison-teaching-grid {
       display: grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
       width: 100%;
     }
     .comparison-text-cell {
-      font-size: 0.9rem;
-      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      border: 1px solid rgba(255,255,255,0.10);
       border-radius: 18px;
-      padding: 18px;
+      padding: 20px;
       min-height: 220px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
     .comparison-text-cell h3 {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 1.12rem;
       color: #f0f4ff;
+      line-height: 1.35;
     }
     .comparison-text-cell .comparison-controls {
       margin-top: 2px;
@@ -434,7 +434,6 @@
       justify-content: center;
     }
     .comparison-interactive-grid {
-      grid-template-columns: 1fr; /* stack demos bigger */
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) auto minmax(0, 1.2fr) auto minmax(0, 1.2fr);
       gap: 20px;
@@ -588,10 +587,10 @@
     .comparison-controls button { min-width: 120px; }
     .comparison-explainer {
       display: grid;
-      gap: 10px;
-      color: #d7e0ff;
-      line-height: 1.6;
-      font-size: 0.95rem;
+      gap: 12px;
+      color: #e1e8ff;
+      line-height: 1.7;
+      font-size: 1rem;
     }
     .comparison-step-pill {
       display: inline-flex;
@@ -608,11 +607,35 @@
     }
     .comparison-live-note {
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      padding: 14px 16px;
       color: #eef4ff;
-      line-height: 1.55;
+      line-height: 1.7;
+      font-size: 0.98rem;
+    }
+    .comparison-quick-guide {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 12px;
+    }
+    .comparison-guide-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .comparison-guide-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #f0f4ff;
+    }
+    .comparison-guide-card p {
+      margin: 0;
+      color: #d7e0ff;
+      line-height: 1.65;
+      font-size: 0.96rem;
     }
 
     [data-main-tab-panel="comparison"] .analysis-grid {
@@ -649,6 +672,12 @@
       margin-top: 16px;
       font-size: 1rem;
       line-height: 1.65;
+    }
+    [data-main-tab-panel="comparison"] .info-list,
+    [data-main-tab-panel="comparison"] .description-text,
+    [data-main-tab-panel="comparison"] .paradigm-card {
+      font-size: 1rem;
+      line-height: 1.75;
     }
 
     .collapsible-section {
@@ -787,7 +816,7 @@
     }
     .dp-summary-compare-grid {
       display: grid;
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
     .dp-summary-card {
@@ -966,11 +995,11 @@
       .controls { max-height: none; }
       .summary-grid, .counter-grid { grid-template-columns: 1fr 1fr; }
       .analysis-grid { grid-template-columns: 1fr; }
-      .complexity-highlight-grid { grid-template-columns: 320px 1fr; }
+      .complexity-highlight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 720px) {
       .summary-grid, .counter-grid, .preset-row, .grid-2, .btn-row, .curve-toolbar, .comparison-interactive-grid, .complexity-highlight-grid { grid-template-columns: 1fr; }
-      .comparison-teaching-grid { grid-template-columns: 1fr; }
+      .comparison-teaching-grid, .comparison-quick-guide { grid-template-columns: 1fr; }
       .comparison-interactive-board { min-height: 620px; }
     }
   </style>
@@ -1314,9 +1343,23 @@ K[i,w] = K[i−1,w]</div>
 <section class="main-tab-panel" data-main-tab-panel="comparison">
 <div class="viz-header">
 <h2>Text Explanation</h2>
-<div class="status">This page is built to satisfy the comparison, sorting/searching, and paradigm requirements together: DP vs Greedy, traceback search, impact analysis, and a clear Dynamic Programming explanation.</div>
+<div class="status">This page is organized for teaching: start with the quick guide, open the demos, then use the worked example and paradigm block to explain why DP is the correct method.</div>
 </div>
 
+<div class="comparison-quick-guide">
+<div class="comparison-guide-card">
+<h3>1. Start here</h3>
+<p>Open the first demo and press <strong>Step through greedy</strong> a few times. Students will see the tempting local choices first.</p>
+</div>
+<div class="comparison-guide-card">
+<h3>2. Reveal the answer</h3>
+<p>Then press <strong>Show DP decision</strong>. This lets you explain that DP checks both <em>include</em> and <em>exclude</em> before storing the better value.</p>
+</div>
+<div class="comparison-guide-card">
+<h3>3. Use the rest of the page</h3>
+<p>After the first demo, move to the worked example, sorting/searching section, and paradigm demo to reinforce the same idea with simpler wording.</p>
+</div>
+</div>
 
 <div class="section collapsible-section">
 <button aria-controls="comparisonInteractiveContent" aria-expanded="false" class="collapsible-toggle" id="comparisonInteractiveToggle" type="button">
@@ -1341,9 +1384,9 @@ K[i,w] = K[i−1,w]</div>
 <div class="comparison-explainer" id="comparisonSummaryText"></div>
 </div>
 <div class="comparison-text-cell">
-<h3>Teacher note</h3>
-<div class="comparison-live-note" id="comparisonLiveNote">This box updates while you step through the example so students can connect the visual change with the explanation.</div>
-<div class="comparison-live-note">Use this area to pause, point at the demo, and explain why a local greedy choice can look good at first but still lose to the DP answer.</div>
+<h3>How to present this demo</h3>
+<div class="comparison-live-note" id="comparisonLiveNote">Live teaching note: as you click the demo buttons, this box explains exactly what to say about the change on screen.</div>
+<div class="comparison-live-note">Presentation tip: first let students predict the greedy choice, then reveal the DP answer and point out that DP compares both branches instead of trusting the first attractive item.</div>
 </div>
 <div class="comparison-text-cell">
 <h3>DP recurrence</h3>
@@ -1420,7 +1463,7 @@ else:
 <div class="paradigm-tabs">
 <button class="tab-btn active" data-paradigm="dp">Dynamic Programming</button>
 <button class="tab-btn" data-paradigm="greedy">Greedy</button>
-<button class="tab-btn" data-paradigm="dc">Divide &amp; Conquer</button>
+<button class="tab-btn" data-paradigm="dc">Brute Force</button>
 </div>
 <div class="analysis-grid">
 <div class="tree-shell">
@@ -1449,7 +1492,7 @@ else:
 <div class="section">
 <h2>Brute-Force Result and Decision Tree</h2>
 <div class="mini-card" style="margin-bottom:12px;">
-<div class="analysis-grid" style="grid-template-columns: 320px 1fr; align-items:start;">
+<div class="analysis-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); align-items:start;">
 <div>
 <h3>Brute-force result for current input</h3>
 <div class="info-list" id="bruteForceResultText"></div>
@@ -1676,7 +1719,7 @@ else:
 
     function bindCollapsibleToggle(toggleEl, contentEl) {
       if (!toggleEl || !contentEl) return;
-      setCollapsibleState(toggleEl, contentEl, false);
+      setCollapsibleState(toggleEl, contentEl, (toggleEl && (toggleEl.id === 'comparisonInteractiveToggle' || toggleEl.id === 'dpPageCompareToggle')) ? true : false);
       toggleEl.addEventListener('click', () => {
         const isExpanded = toggleEl.getAttribute('aria-expanded') === 'true';
         setCollapsibleState(toggleEl, contentEl, !isExpanded);
@@ -3687,11 +3730,11 @@ else:
         if (comparisonInteractiveState.mode === 'reset') {
           comparisonStepPill.textContent = 'Interactive mode: ready';
           comparisonSummaryText.innerHTML = [
-            '<div><strong>Start here:</strong> click <em>Step through greedy</em> to reveal the local ratio-based picks one by one.</div>',
-            '<div><strong>Then compare:</strong> click <em>Show DP decision</em> to reveal the subset chosen after DP checks both include and exclude.</div>',
-            '<div><strong>Teaching goal:</strong> students should see that greedy makes a quick local choice, while DP earns the final answer by comparing alternatives.</div>'
+            '<div><strong>Step 1:</strong> click <em>Step through greedy</em> to reveal the local ratio-based picks one by one.</div>',
+            '<div><strong>Step 2:</strong> click <em>Show DP decision</em> to reveal the subset chosen after DP checks both include and exclude.</div>',
+            '<div><strong>Main message:</strong> greedy makes a quick local choice, but DP earns the final answer by comparing alternatives before deciding.</div>'
           ].join('');
-          comparisonLiveNote.innerHTML = 'This box updates while you step through the example so students can connect the visual change with the explanation.';
+          comparisonLiveNote.innerHTML = 'Live teaching note: as you click the demo buttons, this box explains exactly what to say about the change on screen.';
           return;
         }
 
@@ -3700,9 +3743,9 @@ else:
           const nextItem = greedyOrder[comparisonInteractiveState.greedyStep] || null;
           comparisonStepPill.textContent = `Greedy step ${Math.min(comparisonInteractiveState.greedyStep, Math.max(greedyOrder.length, 1))} of ${Math.max(greedyOrder.length, 1)}`;
           comparisonSummaryText.innerHTML = [
-            `<div><strong>How greedy behaves:</strong> it sorts by ratio first, then keeps taking the next item that still fits.</div>`,
-            `<div><strong>Items shown so far:</strong> ${shown.length ? formatChosenList(shown) : 'none yet'}.</div>`,
-            `<div><strong>Greedy final result for this input:</strong> ${formatChosenList(greedy.chosen)} with value <code>${greedy.totalValue}</code> and weight <code>${greedy.totalWeight}</code>.</div>`
+            `<div><strong>What greedy is doing:</strong> it sorts by value/weight ratio first, then keeps taking the next item that still fits.</div>`,
+            `<div><strong>Items revealed so far:</strong> ${shown.length ? formatChosenList(shown) : 'none yet'}.</div>`,
+            `<div><strong>Greedy result for this input:</strong> ${formatChosenList(greedy.chosen)} with value <code>${greedy.totalValue}</code> and weight <code>${greedy.totalWeight}</code>.</div>`
           ].join('');
           comparisonLiveNote.innerHTML = nextItem
             ? `Greedy is focusing on item <strong>#${nextItem}</strong> next because it looks best locally after sorting by ratio. It still does not compare all remaining combinations.`
@@ -3721,7 +3764,7 @@ else:
         comparisonStepPill.textContent = 'DP decision revealed';
         comparisonSummaryText.innerHTML = [
           `<div><strong>DP answer:</strong> ${formatChosenList(optimal.chosenIds)} with value <code>${optimal.totalValue}</code> and weight <code>${optimal.totalWeight}</code>.</div>`,
-          `<div><strong>Why DP is different:</strong> for each state it compares the exclude value and the include value before storing the better answer.</div>`,
+          `<div><strong>Why DP is different:</strong> at each state it compares the exclude value with the include value, then stores the better answer.</div>`,
           loss > 0
             ? `<div><strong>Why greedy fails here:</strong> the local ratio path ends at <code>${greedy.totalValue}</code>, but DP finds <code>${optimal.totalValue}</code>, so the greedy choice loses <code>${loss}</code> value.</div>`
             : '<div><strong>Key point:</strong> DP still checks both branches even when greedy happens to land on the same result.</div>'
@@ -3786,7 +3829,7 @@ else:
             ? `<div><strong>Include option:</strong> take item #${item.id} (weight ${item.weight}, value ${item.value}), so the value becomes <code>${item.value} + K[${focusI - 1},${focusW - item.weight}] = ${item.value} + ${dp[focusI - 1][focusW - item.weight]} = ${include}</code>.</div>`
             : `<div><strong>Include option:</strong> not allowed here because item #${item.id} has weight ${item.weight}, which is larger than capacity ${focusW}.</div>`,
           `<div><strong>Stored answer:</strong> <code>K[${focusI},${focusW}] = ${dp[focusI][focusW]}</code> because DP stores the better of the available choices.</div>`,
-          '<div><strong>This is the whole DP idea:</strong> understand one cell correctly, then repeat that same logic across the table.</div>'
+          '<div><strong>Simple takeaway:</strong> once students understand one cell, they understand the rule used for the whole table.</div>'
         ].join('');
       } catch {
         comparisonWorkedExampleText.innerHTML = '<div>Enter valid items and capacity to generate a worked DP state explanation.</div>';
@@ -3802,8 +3845,8 @@ else:
         const broken = brokenTraceback(items, capacity, dp);
         const optimal = solveDpSelection(items, capacity, dp);
         if (impactMode.value === 'correct') impactText.innerHTML = [
-          '<div><strong>Sorting role:</strong> ratio sorting is a teaching aid and a greedy heuristic, not a required step for correct 0/1 DP.</div>',
-          '<div><strong>Searching role:</strong> traceback must compare <code>K[i,w]</code> and <code>K[i-1,w]</code> to recover the correct subset.</div>',
+          '<div><strong>Sorting role:</strong> ratio sorting is only a teaching aid and a greedy heuristic. It is not required for correct 0/1 DP.</div>',
+          '<div><strong>Searching role:</strong> traceback compares <code>K[i,w]</code> and <code>K[i-1,w]</code> to recover the correct subset.</div>',
           `<div><strong>Current input:</strong> greedy ratio gives value <code>${greedy.totalValue}</code>, while DP gives the optimal value <code>${optimal.totalValue}</code>.</div>`,
           '<div><strong>Student takeaway:</strong> this page intentionally separates “helpful intuition” from “the step that guarantees correctness”.</div>'
         ].join('');
@@ -3833,10 +3876,10 @@ else:
         const dp = getWorkingDp(items, capacity);
         const optimal = solveDpSelection(items, capacity, dp);
         sortSearchText.innerHTML = [
-          `<div><strong>Sorting intuition:</strong> by value/weight ratio, the order for the current input is ${ratioText}. This is a useful first idea because it quickly tells students which items look efficient.</div>`,
-          `<div><strong>But for 0/1 knapsack:</strong> greedy ratio choice on the current input gets value <code>${greedy.totalValue}</code>, while DP reaches the optimal value <code>${optimal.totalValue}</code>.</div>`,
+          `<div><strong>Sorting intuition:</strong> by value/weight ratio, the order for the current input is ${ratioText}. This is useful because it quickly shows which items look efficient at first glance.</div>`,
+          `<div><strong>But for 0/1 knapsack:</strong> greedy on the current input gets value <code>${greedy.totalValue}</code>, while DP reaches the optimal value <code>${optimal.totalValue}</code>.</div>`,
           '<div><strong>Searching during traceback:</strong> once the table is complete, compare <code>K[i,w]</code> with <code>K[i-1,w]</code>. Equal means exclude; different means include and move left by the item weight.</div>',
-          '<div><strong>Why both ideas appear on this page:</strong> sorting explains the temptation, and traceback search explains the correct recovery of the final subset.</div>'
+          '<div><strong>Why both ideas appear here:</strong> sorting explains the temptation, and traceback search explains how the correct final subset is recovered.</div>'
         ].join('');
       } catch {
         sortSearchText.innerHTML = '<div><strong>Sorting intuition:</strong> ratio ordering is a greedy first thought.</div><div><strong>Searching during traceback:</strong> compare the current DP cell with the one above it.</div>';
@@ -4197,11 +4240,11 @@ else:
           pulseIndex = (pulseIndex + 1) % Math.max(1, boxes.length);
         }, 700);
       } else {
-        paradigmCard.innerHTML = '<strong>Divide &amp; Conquer</strong><br><br>A pure divide-and-conquer view of knapsack branches into two recursive calls at every item: include it or exclude it. Without memoization, the same subproblems are solved again and again, which is much slower than DP.';
+        paradigmCard.innerHTML = '<strong>Brute Force</strong><br><br>Brute force tries every possible include/exclude combination of items. It is easy to understand because it explores the full decision tree, but it repeats many states and quickly becomes too slow as the number of items grows.';
         paradigmCompareText.innerHTML = [
-          '<div><strong>What changes:</strong> D&amp;C uses the same include/exclude idea, but keeps recomputing repeated states.</div>',
-          '<div><strong>Why it is worse:</strong> the recursion tree grows exponentially as <code>O(2^n)</code> unless memoization turns it into DP.</div>',
-          '<div><strong>Correctness:</strong> D&amp;C can still be correct, but it is typically far slower than the DP table-filling approach shown here.</div>'
+          '<div><strong>What you are seeing:</strong> brute force branches on every item into two choices: exclude it or include it.</div>',
+          '<div><strong>Why it is expensive:</strong> the full recursion tree has about <code>2^n</code> leaves, so the work grows exponentially.</div>',
+          '<div><strong>Connection to DP:</strong> some recursive states repeat, and Dynamic Programming speeds this up by storing those answers once instead of recomputing them.</div>'
         ].join('');
 
         const nodes = [
@@ -4226,7 +4269,7 @@ else:
           paradigmViz.appendChild(svgEl('rect', { x: node.x, y: node.y, width: 110, height: 52, rx: 12, fill: node.fill, stroke: '#cfd9ff', 'stroke-width': 1.6, 'data-dcnode': String(idx) }));
           paradigmViz.appendChild(svgEl('text', { x: node.x + 55, y: node.y + 31, fill: '#eef4ff', 'font-size': '16', 'text-anchor': 'middle', 'font-weight': '700' }, node.text));
         });
-        paradigmViz.appendChild(svgEl('text', { x: 550, y: 392, fill: '#d7e0ff', 'font-size': '16', 'text-anchor': 'middle' }, 'Purple recursive calls represent repeated states that DP would store and reuse once.'));
+        paradigmViz.appendChild(svgEl('text', { x: 550, y: 392, fill: '#d7e0ff', 'font-size': '16', 'text-anchor': 'middle' }, 'Purple recursive calls show repeated states that brute force recomputes, but DP would store once and reuse.'));
 
         let pulseIndex = 0;
         window.paradigmAnimTimer = setInterval(() => {
@@ -4320,7 +4363,7 @@ else:
     }
 
     buildPseudocodePanel();
-    setMainTab('dp-visualizer');
+    setMainTab('comparison');
     runSelfTests();
     renderHistoryTable();
     updateUI();
