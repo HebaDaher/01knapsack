@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -229,6 +229,9 @@
       padding: 12px;
       min-width: 0;
     }
+    .curve-shell.growth-shell {
+      padding: 18px;
+    }
     .svg-shell { min-height: 560px; overflow: auto; }
     .history-shell {
       overflow-x: auto;
@@ -358,7 +361,72 @@
     .analysis-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr); gap: 14px; }
     .complexity-state-shell { padding: 14px; }
     #complexityStateViz { display: block; width: 100%; height: 560px; }
-    .curve-toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: end; }
+    .curve-toolbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 12px; align-items: end; }
+    .growth-comparison-grid { grid-template-columns: 1fr; }
+    .growth-shell { padding: 16px; max-width: 1220px; margin: 0 auto; }
+    #curveViz { display: block; width: 100%; min-height: 560px; max-height: 560px; margin: 0 auto; }
+    .curve-stepper-group {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .curve-stepper-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .stepper-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .stepper-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stepper-btn {
+      min-width: 42px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stepper-value {
+      min-width: 112px;
+      text-align: right;
+      color: #eef4ff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .scenario-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .scenario-card strong {
+      display: block;
+      color: #eef4ff;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+    .scenario-card span {
+      color: #cfd9ff;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      display: block;
+    }
     .curve-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; color: var(--muted); font-size: 0.88rem; }
     .curve-legend-item { display: flex; align-items: center; gap: 8px; }
     .dot { width: 12px; height: 12px; border-radius: 999px; }
@@ -998,7 +1066,7 @@
       .complexity-highlight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 720px) {
-      .summary-grid, .counter-grid, .preset-row, .grid-2, .btn-row, .curve-toolbar, .comparison-interactive-grid, .complexity-highlight-grid { grid-template-columns: 1fr; }
+      .summary-grid, .counter-grid, .preset-row, .grid-2, .btn-row, .curve-toolbar, .comparison-interactive-grid, .complexity-highlight-grid, .scenario-grid, .curve-stepper-group { grid-template-columns: 1fr; }
       .comparison-teaching-grid, .comparison-quick-guide { grid-template-columns: 1fr; }
       .comparison-interactive-board { min-height: 620px; }
     }
@@ -1156,7 +1224,7 @@ K[i,w] = K[i−1,w]</div>
 <button aria-controls="dpPageCompareContent" aria-expanded="false" class="collapsible-toggle" id="dpPageCompareToggle" type="button">
 <span class="collapsible-toggle-left">
 <span class="collapsible-toggle-title">Greedy vs DP Text Explanation</span>
-<span class="collapsible-toggle-subtitle">Hidden by default. Press to show or hide the whole comparison block.</span>
+<span class="collapsible-toggle-subtitle">Hidden by default. Press to show the comparison block.</span>
 </span>
 <span aria-hidden="true" class="collapsible-arrow">▾</span>
 </button>
@@ -1288,23 +1356,57 @@ K[i,w] = K[i−1,w]</div>
 </div>
 <div class="section">
 <h2>What the chart is trying to show</h2>
-<div class="analysis-grid">
-<div class="curve-shell">
+<div class="analysis-grid growth-comparison-grid">
+<div class="curve-shell growth-shell">
 <div class="curve-toolbar">
 <div>
 <label for="curveMaxN">Compare growth up to n</label>
-<input id="curveMaxN" max="64" min="8" step="4" type="range" value="24"/>
+<input id="curveMaxN" max="96" min="8" step="4" type="range" value="24"/>
+</div>
+<div>
+<label for="curveMaxW">Compare growth up to W</label>
+<input id="curveMaxW" max="160" min="8" step="4" type="range" value="40"/>
 </div>
 <div>
 <label for="curveView">Chart mode</label>
 <select id="curveView">
-<option value="all">All curves</option>
+<option value="all">All curves vs n</option>
 <option value="dp-focus">DP vs brute force</option>
+<option value="vary-w">DP sensitivity vs W</option>
+<option value="scenario">n and W change scenarios</option>
 <option value="log-scale">Easier shape comparison</option>
 </select>
 </div>
 </div>
-<svg aria-label="Complexity growth chart" id="curveViz" viewbox="0 0 900 420"></svg>
+<div class="curve-stepper-group">
+<div class="curve-stepper-card">
+<label>Interactive n control</label>
+<div class="stepper-row">
+<div class="stepper-buttons">
+<button class="stepper-btn" id="curveNDownBtn" type="button">−</button>
+<button class="stepper-btn" id="curveNUpBtn" type="button">+</button>
+</div>
+<div class="stepper-value" id="curveCurrentNLabel">n = 4</div>
+</div>
+</div>
+<div class="curve-stepper-card">
+<label>Interactive W control</label>
+<div class="stepper-row">
+<div class="stepper-buttons">
+<button class="stepper-btn" id="curveWDownBtn" type="button">−</button>
+<button class="stepper-btn" id="curveWUpBtn" type="button">+</button>
+</div>
+<div class="stepper-value" id="curveCurrentWLabel">W = 8</div>
+</div>
+</div>
+</div>
+<svg aria-label="Complexity growth chart" id="curveViz" viewbox="0 0 1220 560"></svg>
+<div class="scenario-grid" id="scenarioSummaryGrid">
+<div class="scenario-card"><strong>n decreases</strong><span id="scenarioNDown">—</span></div>
+<div class="scenario-card"><strong>n increases</strong><span id="scenarioNUp">—</span></div>
+<div class="scenario-card"><strong>W decreases</strong><span id="scenarioWDown">—</span></div>
+<div class="scenario-card"><strong>W increases</strong><span id="scenarioWUp">—</span></div>
+</div>
 <div class="curve-legend">
 <div class="curve-legend-item"><span class="dot" style="background:var(--curve-actual);"></span> measured DP operation count in this app</div>
 <div class="curve-legend-item"><span class="dot" style="background:var(--curve-dp);"></span> DP state count ≈ nW</div>
@@ -1365,7 +1467,7 @@ K[i,w] = K[i−1,w]</div>
 <button aria-controls="comparisonInteractiveContent" aria-expanded="false" class="collapsible-toggle" id="comparisonInteractiveToggle" type="button">
 <span class="collapsible-toggle-left">
 <span class="collapsible-toggle-title">Current Input: DP vs Greedy Text Explanation</span>
-<span class="collapsible-toggle-subtitle">Hidden by default. Press to reveal the full interactive comparison.</span>
+<span class="collapsible-toggle-subtitle">Hidden by default. Press to show the interactive comparison.</span>
 </span>
 <span aria-hidden="true" class="collapsible-arrow">▾</span>
 </button>
@@ -1533,7 +1635,8 @@ else:
       playing: false,
       timer: null,
       paradigm: 'dp',
-      solution: { chosenIds: [], vector: [], totalWeight: 0, optimalValue: 0 }
+      solution: { chosenIds: [], vector: [], totalWeight: 0, optimalValue: 0 },
+      complexityControls: { n: 4, w: 8 }
     };
 
     const presets = {
@@ -1600,7 +1703,18 @@ else:
     const curveViz = byId('curveViz');
     const complexityStateViz = byId('complexityStateViz');
     const curveMaxN = byId('curveMaxN');
+    const curveMaxW = byId('curveMaxW');
     const curveView = byId('curveView');
+    const curveNDownBtn = byId('curveNDownBtn');
+    const curveNUpBtn = byId('curveNUpBtn');
+    const curveWDownBtn = byId('curveWDownBtn');
+    const curveWUpBtn = byId('curveWUpBtn');
+    const curveCurrentNLabel = byId('curveCurrentNLabel');
+    const curveCurrentWLabel = byId('curveCurrentWLabel');
+    const scenarioNDown = byId('scenarioNDown');
+    const scenarioNUp = byId('scenarioNUp');
+    const scenarioWDown = byId('scenarioWDown');
+    const scenarioWUp = byId('scenarioWUp');
     const pillN = byId('pillN');
     const pillW = byId('pillW');
     const pillDPCells = byId('pillDPCells');
@@ -1719,7 +1833,7 @@ else:
 
     function bindCollapsibleToggle(toggleEl, contentEl) {
       if (!toggleEl || !contentEl) return;
-      setCollapsibleState(toggleEl, contentEl, (toggleEl && (toggleEl.id === 'comparisonInteractiveToggle' || toggleEl.id === 'dpPageCompareToggle')) ? true : false);
+      setCollapsibleState(toggleEl, contentEl, false);
       toggleEl.addEventListener('click', () => {
         const isExpanded = toggleEl.getAttribute('aria-expanded') === 'true';
         setCollapsibleState(toggleEl, contentEl, !isExpanded);
@@ -2790,51 +2904,120 @@ else:
       svg.appendChild(svgEl('path', { d, fill: 'none', stroke: color, 'stroke-width': 3, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
     }
 
+    function getComplexityBaseItems() {
+      try { return parseItems(); } catch { return []; }
+    }
+
+    function syncComplexityControlsFromInputs() {
+      const items = getComplexityBaseItems();
+      const n = Math.max(1, items.length || 1);
+      const w = Math.max(1, Number(capacityInput.value) || 1);
+      state.complexityControls.n = n;
+      state.complexityControls.w = w;
+    }
+
+    function setComplexityControl(key, delta) {
+      if (!state.complexityControls) state.complexityControls = { n: 1, w: 1 };
+      const maxNBound = Math.max(Number(curveMaxN?.value || 24), 1);
+      const maxWBound = Math.max(Number(curveMaxW?.value || 40), 1);
+      if (key === 'n') {
+        state.complexityControls.n = Math.max(1, Math.min(maxNBound, (state.complexityControls.n || 1) + delta));
+      } else if (key === 'w') {
+        state.complexityControls.w = Math.max(1, Math.min(maxWBound, (state.complexityControls.w || 1) + delta));
+      }
+      updateCurveViz();
+    }
+
+    function formatComplexityWork(items, w) {
+      const ops = countDpOperations(items, w);
+      return { ops: ops.total, states: items.length * w, brute: Math.pow(2, Math.min(items.length, 20)) };
+    }
+
     function updateCurveViz() {
       if (!curveViz) return;
       curveViz.innerHTML = '';
       const maxN = Number(curveMaxN.value);
+      const maxW = Number(curveMaxW.value);
       const mode = curveView.value;
-      const plot = { x: 70, y: 28, w: 780, h: 300 };
-      const currentN = (() => { try { return parseItems().length; } catch { return 0; } })();
-      const W = Math.max(1, Number(capacityInput.value) || 1);
+      const chartW = 1220;
+      const chartH = 560;
+      const plot = { x: 92, y: 46, w: 1020, h: 320 };
+      const baseItems = getComplexityBaseItems();
+      const inputN = Math.max(1, baseItems.length || 1);
+      const inputW = Math.max(1, Number(capacityInput.value) || 1);
 
-      let baseItems = [];
-      try { baseItems = parseItems(); } catch { baseItems = []; }
+      if (!state.complexityControls) state.complexityControls = { n: inputN, w: inputW };
+      state.complexityControls.n = Math.max(1, Math.min(maxN, state.complexityControls.n || inputN));
+      state.complexityControls.w = Math.max(1, Math.min(maxW, state.complexityControls.w || inputW));
+
+      const currentN = state.complexityControls.n;
+      const currentW = state.complexityControls.w;
+      curveCurrentNLabel.textContent = `n = ${currentN}`;
+      curveCurrentWLabel.textContent = `W = ${currentW}`;
+
+      const buildItemsForN = (n) => Array.from({ length: n }, (_, idx) => {
+        const src = baseItems[idx % Math.max(1, baseItems.length)] || { weight: (idx % 5) + 1, value: (idx % 7) + 2, id: idx + 1 };
+        return { id: idx + 1, weight: src.weight, value: src.value };
+      });
 
       const ns = Array.from({ length: Math.max(1, maxN) }, (_, i) => i + 1);
-      const actualDp = ns.map(n => {
-        const prefix = Array.from({ length: n }, (_, idx) => {
-          const src = baseItems[idx % Math.max(1, baseItems.length)] || { weight: (idx % 5) + 1, value: (idx % 7) + 2, id: idx + 1 };
-          return { id: idx + 1, weight: src.weight, value: src.value };
-        });
-        return countDpOperations(prefix, W).total;
-      });
-      const dpStates = ns.map(n => n * W);
-      const greedyFractional = ns.map(n => n * Math.log2(Math.max(2, n)));
-      const bruteForce = ns.map(n => Math.pow(2, Math.min(n, 20)));
+      const ws = Array.from({ length: Math.max(1, maxW) }, (_, i) => i + 1);
+      const actualDpByN = ns.map(n => countDpOperations(buildItemsForN(n), currentW).total);
+      const dpStatesByN = ns.map(n => n * currentW);
+      const greedyByN = ns.map(n => n * Math.log2(Math.max(2, n)));
+      const bruteByN = ns.map(n => Math.pow(2, Math.min(n, 20)));
 
-      const series = [
-        { key: 'actual', label: 'Measured DP ops', color: 'var(--curve-actual)', values: actualDp, visible: true },
-        { key: 'dp', label: 'DP state count ~ nW', color: 'var(--curve-dp)', values: dpStates, visible: true },
-        { key: 'greedy', label: 'Fractional greedy ~ n log n', color: 'var(--curve-greedy)', values: greedyFractional, visible: true },
-        { key: 'exp', label: 'Brute force subsets = 2^n', color: 'var(--curve-exp)', values: bruteForce, visible: true }
+      const actualDpByW = ws.map(w => countDpOperations(buildItemsForN(currentN), w).total);
+      const dpStatesByW = ws.map(w => currentN * w);
+      const greedyByW = ws.map(() => currentN * Math.log2(Math.max(2, currentN)));
+      const bruteByW = ws.map(() => Math.pow(2, Math.min(currentN, 20)));
+
+      let xValues = ns;
+      let xAxisLabel = 'number of items (n)';
+      let activeSeries = [
+        { key: 'actual', label: 'Measured DP ops', color: 'var(--curve-actual)', values: actualDpByN, visible: true },
+        { key: 'dp', label: 'DP state count ~ nW', color: 'var(--curve-dp)', values: dpStatesByN, visible: true },
+        { key: 'greedy', label: 'Fractional greedy ~ n log n', color: 'var(--curve-greedy)', values: greedyByN, visible: true },
+        { key: 'exp', label: 'Brute force subsets = 2^n', color: 'var(--curve-exp)', values: bruteByN, visible: true }
       ];
-      if (mode === 'dp-focus') series.find(s => s.key === 'greedy').visible = false;
-      const useLogScale = mode === 'log-scale';
 
-      const activeSeries = series.filter(s => s.visible);
+      if (mode === 'dp-focus') {
+        activeSeries = activeSeries.filter(s => s.key !== 'greedy');
+      } else if (mode === 'vary-w') {
+        xValues = ws;
+        xAxisLabel = 'capacity / weight limit (W)';
+        activeSeries = [
+          { key: 'actual', label: 'Measured DP ops vs W', color: 'var(--curve-actual)', values: actualDpByW, visible: true },
+          { key: 'dp', label: 'DP state count ~ nW', color: 'var(--curve-dp)', values: dpStatesByW, visible: true },
+          { key: 'greedy', label: 'Greedy sort cost stays almost flat', color: 'var(--curve-greedy)', values: greedyByW, visible: true },
+          { key: 'exp', label: 'Brute force depends on n, not W', color: 'var(--curve-exp)', values: bruteByW, visible: true }
+        ];
+      } else if (mode === 'scenario') {
+        xValues = ns;
+        xAxisLabel = 'scenario sweep on n (with W snapshots)';
+        const halfW = Math.max(1, Math.floor(currentW / 2));
+        const doubleW = Math.min(maxW, Math.max(currentW + 1, currentW * 2));
+        activeSeries = [
+          { key: 'w-half', label: `DP ops when W=${halfW}`, color: '#8fb3ff', values: ns.map(n => countDpOperations(buildItemsForN(n), halfW).total), visible: true },
+          { key: 'w-current', label: `DP ops when W=${currentW}`, color: 'var(--curve-actual)', values: ns.map(n => countDpOperations(buildItemsForN(n), currentW).total), visible: true },
+          { key: 'w-double', label: `DP ops when W=${doubleW}`, color: '#ffcf5a', values: ns.map(n => countDpOperations(buildItemsForN(n), doubleW).total), visible: true },
+          { key: 'exp', label: 'Brute force subsets = 2^n', color: 'var(--curve-exp)', values: bruteByN, visible: true }
+        ];
+      }
+
+      const useLogScale = mode === 'log-scale';
       const transformedSeries = activeSeries.map(s => ({
         ...s,
         transformed: useLogScale ? s.values.map(v => Math.log2(v + 1)) : s.values
       }));
       const maxVal = Math.max(1, ...transformedSeries.flatMap(s => s.transformed));
 
-      curveViz.appendChild(svgEl('rect', { x: 0, y: 0, width: 900, height: 420, rx: 16, fill: '#0f1730', stroke: '#324776' }));
+      curveViz.appendChild(svgEl('rect', { x: 0, y: 0, width: chartW, height: chartH, rx: 22, fill: '#0f1730', stroke: '#324776' }));
 
-      if (currentN >= 1 && currentN <= maxN) {
-        const xHighlight = plot.x + ((currentN - 1) / Math.max(1, ns.length - 1)) * plot.w;
-        curveViz.appendChild(svgEl('rect', { x: xHighlight - 7, y: plot.y, width: 14, height: plot.h, fill: 'rgba(122,162,255,0.10)' }));
+      const markerIndex = (mode === 'vary-w' ? currentW : currentN) - 1;
+      if (markerIndex >= 0 && markerIndex < xValues.length) {
+        const xHighlight = plot.x + (markerIndex / Math.max(1, xValues.length - 1)) * plot.w;
+        curveViz.appendChild(svgEl('rect', { x: xHighlight - 10, y: plot.y, width: 20, height: plot.h, fill: 'rgba(122,162,255,0.10)' }));
       }
 
       for (let i = 0; i <= 5; i += 1) {
@@ -2842,14 +3025,14 @@ else:
         const value = ((5 - i) / 5) * maxVal;
         curveViz.appendChild(svgEl('line', { x1: plot.x, y1: y, x2: plot.x + plot.w, y2: y, stroke: 'rgba(255,255,255,0.08)' }));
         const label = useLogScale ? `2^${value.toFixed(1)}` : Math.round(value).toLocaleString();
-        curveViz.appendChild(svgEl('text', { x: plot.x - 10, y: y + 4, fill: '#aebbe6', 'font-size': '11', 'text-anchor': 'end' }, label));
+        curveViz.appendChild(svgEl('text', { x: plot.x - 18, y: y + 5, fill: '#aebbe6', 'font-size': '14', 'text-anchor': 'end' }, label));
       }
 
-      const xTicks = [1, Math.max(2, Math.floor(maxN * 0.25)), Math.max(3, Math.floor(maxN * 0.5)), Math.max(4, Math.floor(maxN * 0.75)), maxN];
-      [...new Set(xTicks)].forEach(n => {
-        const x = plot.x + ((n - 1) / Math.max(1, ns.length - 1)) * plot.w;
+      const tickCandidates = [1, Math.max(2, Math.floor(xValues.length * 0.25)), Math.max(3, Math.floor(xValues.length * 0.5)), Math.max(4, Math.floor(xValues.length * 0.75)), xValues.length];
+      [...new Set(tickCandidates)].forEach(n => {
+        const x = plot.x + ((n - 1) / Math.max(1, xValues.length - 1)) * plot.w;
         curveViz.appendChild(svgEl('line', { x1: x, y1: plot.y, x2: x, y2: plot.y + plot.h, stroke: 'rgba(255,255,255,0.06)' }));
-        curveViz.appendChild(svgEl('text', { x, y: plot.y + plot.h + 18, fill: '#aebbe6', 'font-size': '11', 'text-anchor': 'middle' }, String(n)));
+        curveViz.appendChild(svgEl('text', { x, y: plot.y + plot.h + 26, fill: '#aebbe6', 'font-size': '14', 'text-anchor': 'middle' }, String(n)));
       });
 
       curveViz.appendChild(svgEl('line', { x1: plot.x, y1: plot.y + plot.h, x2: plot.x + plot.w, y2: plot.y + plot.h, stroke: '#8aa3d8', 'stroke-width': 1.4 }));
@@ -2858,31 +3041,44 @@ else:
       transformedSeries.forEach(s => {
         drawPolyline(curveViz, plot, s.transformed, maxVal, s.color);
         s.transformed.forEach((v, idx) => {
-          if (idx % Math.max(1, Math.floor(ns.length / 10)) !== 0 && idx !== ns.length - 1) return;
+          if (idx % Math.max(1, Math.floor(xValues.length / 12)) !== 0 && idx !== xValues.length - 1) return;
           const x = plot.x + (idx / Math.max(1, s.transformed.length - 1)) * plot.w;
           const y = plot.y + plot.h - (v / maxVal) * plot.h;
-          curveViz.appendChild(svgEl('circle', { cx: x, cy: y, r: 3.5, fill: s.color, stroke: '#0f1730', 'stroke-width': 1 }));
+          curveViz.appendChild(svgEl('circle', { cx: x, cy: y, r: 5, fill: s.color, stroke: '#0f1730', 'stroke-width': 1 }));
         });
       });
 
-      if (currentN >= 1 && currentN <= maxN) {
-        const idx = currentN - 1;
-        const noteY = 360;
-        curveViz.appendChild(svgEl('text', { x: 450, y: noteY, fill: '#dce6ff', 'font-size': '13', 'text-anchor': 'middle' }, `Current input marker: n = ${currentN}, W = ${W}`));
-        const metrics = [
-          `Measured DP ops ≈ ${actualDp[idx].toLocaleString()}`,
-          `DP states ≈ ${(dpStates[idx]).toLocaleString()}`,
-          `Brute-force subsets = ${bruteForce[idx].toLocaleString()}`
-        ];
-        metrics.forEach((msg, i) => curveViz.appendChild(svgEl('text', { x: 450, y: noteY + 18 + i * 16, fill: '#9fb2e9', 'font-size': '12', 'text-anchor': 'middle' }, msg)));
-      }
+      const metricsY = 430;
+      const currentItems = buildItemsForN(currentN);
+      const currentMetrics = formatComplexityWork(currentItems, currentW);
+      const metrics = [
+        `Interactive marker: n = ${currentN}, W = ${currentW}` ,
+        `Measured DP ops ≈ ${currentMetrics.ops.toLocaleString()}`,
+        `DP states ≈ ${(currentN * currentW).toLocaleString()}`,
+        `Brute-force subsets = ${currentMetrics.brute.toLocaleString()}`
+      ];
+      metrics.forEach((msg, i) => curveViz.appendChild(svgEl('text', { x: chartW / 2, y: metricsY + i * 24, fill: i === 0 ? '#dce6ff' : '#9fb2e9', 'font-size': i === 0 ? '18' : '15', 'text-anchor': 'middle' }, msg)));
 
-      curveViz.appendChild(svgEl('text', { x: 460, y: 345, fill: '#cfd9ff', 'font-size': '13', 'text-anchor': 'middle' }, 'number of items (n)'));
-      curveViz.appendChild(svgEl('text', { x: 20, y: 178, fill: '#cfd9ff', 'font-size': '13', transform: 'rotate(-90 20 178)', 'text-anchor': 'middle' }, useLogScale ? 'log-scaled growth' : 'relative work / states'));
-      pillN.textContent = `n = ${baseItems.length}`;
-      pillW.textContent = `W = ${W}`;
-      pillDPCells.textContent = `states = ${(baseItems.length + 1) * (W + 1)}`;
-      pillTime.textContent = useLogScale ? 'log scale enabled' : 'pseudo-polynomial DP';
+      curveViz.appendChild(svgEl('text', { x: chartW / 2, y: 530, fill: '#cfd9ff', 'font-size': '18', 'text-anchor': 'middle' }, xAxisLabel));
+      curveViz.appendChild(svgEl('text', { x: 28, y: 206, fill: '#cfd9ff', 'font-size': '18', transform: 'rotate(-90 28 206)', 'text-anchor': 'middle' }, useLogScale ? 'log-scaled growth' : 'relative work / states'));
+
+      pillN.textContent = `n = ${currentN}`;
+      pillW.textContent = `W = ${currentW}`;
+      pillDPCells.textContent = `states = ${(currentN + 1) * (currentW + 1)}`;
+      pillTime.textContent = mode === 'vary-w' ? 'varying W' : (useLogScale ? 'log scale enabled' : 'pseudo-polynomial DP');
+
+      const nDown = Math.max(1, currentN - 1);
+      const nUp = Math.min(maxN, currentN + 1);
+      const wDown = Math.max(1, currentW - 1);
+      const wUp = Math.min(maxW, currentW + 1);
+      const nDownMetrics = formatComplexityWork(buildItemsForN(nDown), currentW);
+      const nUpMetrics = formatComplexityWork(buildItemsForN(nUp), currentW);
+      const wDownMetrics = formatComplexityWork(buildItemsForN(currentN), wDown);
+      const wUpMetrics = formatComplexityWork(buildItemsForN(currentN), wUp);
+      scenarioNDown.textContent = `n = ${nDown} → DP ops ${nDownMetrics.ops.toLocaleString()}, states ${(nDown * currentW).toLocaleString()}`;
+      scenarioNUp.textContent = `n = ${nUp} → DP ops ${nUpMetrics.ops.toLocaleString()}, states ${(nUp * currentW).toLocaleString()}`;
+      scenarioWDown.textContent = `W = ${wDown} → DP ops ${wDownMetrics.ops.toLocaleString()}, states ${(currentN * wDown).toLocaleString()}`;
+      scenarioWUp.textContent = `W = ${wUp} → DP ops ${wUpMetrics.ops.toLocaleString()}, states ${(currentN * wUp).toLocaleString()}`;
     }
 
     function getRatioSortSnapshots(items) {
@@ -4284,6 +4480,7 @@ else:
     }
 
     function updateAnalysis() {
+      syncComplexityControlsFromInputs();
       updateRatioPreview();
       updateCompareSnapshotViz();
       updateComparisonSummary();
@@ -4319,7 +4516,12 @@ else:
     if (sortAutoBtn) sortAutoBtn.addEventListener('click', toggleSortAnimation);
     if (sortResetBtn) sortResetBtn.addEventListener('click', resetSortAnimation);
     curveMaxN.addEventListener('input', updateCurveViz);
+    curveMaxW.addEventListener('input', updateCurveViz);
     curveView.addEventListener('change', updateCurveViz);
+    curveNDownBtn.addEventListener('click', () => setComplexityControl('n', -1));
+    curveNUpBtn.addEventListener('click', () => setComplexityControl('n', 1));
+    curveWDownBtn.addEventListener('click', () => setComplexityControl('w', -1));
+    curveWUpBtn.addEventListener('click', () => setComplexityControl('w', 1));
     impactMode.addEventListener('change', updateImpactAnalysis);
     compareGreedyStepBtn.addEventListener('click', stepGreedyInteractive);
     compareDpStepBtn.addEventListener('click', showDpInteractive);
@@ -4332,6 +4534,7 @@ else:
     mainTabButtons.forEach(btn => btn.addEventListener('click', () => setMainTab(btn.dataset.mainTab)));
     bindCollapsibleToggle(comparisonInteractiveToggle, comparisonInteractiveContent);
     bindCollapsibleToggle(dpPageCompareToggle, dpPageCompareContent);
+    syncComplexityControlsFromInputs();
 
     function runSelfTests() {
       console.assert(parseItemsFromText('2,3\n3,4').length === 2, 'parseItemsFromText should parse two items');
@@ -4363,7 +4566,7 @@ else:
     }
 
     buildPseudocodePanel();
-    setMainTab('comparison');
+    setMainTab('dp-visualizer');
     runSelfTests();
     renderHistoryTable();
     updateUI();
